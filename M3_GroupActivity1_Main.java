@@ -1,7 +1,6 @@
 package M3_GroupActivity1;
 
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -21,26 +20,28 @@ public class M3_GroupActivity1_Main {
 				displayMenu();
 				System.out.print("> ");
 				String inputChoice = scanner.nextLine().trim();
-
-	                if (!isNumeric(inputChoice)) {
-	                    System.out.println("Please enter a number within 1 to 5.\n");
-	                    continue;
-	                }
-
-	                int choice = Integer.parseInt(inputChoice);
+				char choice;
+	            	
+			
+	            	if ((inputChoice == null) || (inputChoice.length() != 1) ) {
+	            		choice = "0".charAt(0);
+	            	} else {
+	            		choice = inputChoice.charAt(0);
+	            	} 
+	            	
 	                switch (choice) {
-	                	case 1:
+	                	case '1':
 	                        addProduct(scanner);
 	                        break;
-	                	case 2:
+	                	case '2':
 	                		processNextProducts();
-	                    case 3:
+	                    case '3':
 	                    	checkNumberOfProducts();
 	                        break;
-	                    case 4:
+	                    case '4':
 	                    	viewTotalBill();
 	                        break;
-	                    case 5:
+	                    case '5':
 	                    	viewFinalTotal();
 	                        scanner.close();
 	                        return;
@@ -76,6 +77,14 @@ public class M3_GroupActivity1_Main {
         System.out.print("Enter product name to add: ");
         String name = scanner.nextLine().trim();
         
+
+        while (name.isEmpty()) {
+            System.out.println("Product name is invalid.");
+            System.out.print("Enter product name to add: ");
+            name = scanner.nextLine().trim();
+        }
+
+        
         Double priceOfProduct = null;        
         while (priceOfProduct == null) {
             System.out.print("Enter price of Product: ");
@@ -84,14 +93,14 @@ public class M3_GroupActivity1_Main {
             	if (isMultiplePeriod(priceOfProductStr)) {
             		priceOfProduct = Double.parseDouble(String.valueOf(priceOfProductStr));
             		if (priceOfProduct < 0) {
-            			System.out.println("Price of Product cannot be negative.");
+            			System.out.println("Price of Product is invalid.");
             			priceOfProduct = null;
             			}
             		} else {
-            			System.out.println("Price of Product cannot have multiple periods.");
+            			System.out.println("Price of Product is invalid.");
             			}
             	} else {
-            		System.out.println("Please enter a valid numeric price of Product.");
+            		System.out.println("Price of Product is invalid.");
             		}
             }
 
@@ -127,61 +136,13 @@ public class M3_GroupActivity1_Main {
         System.out.println("Final total bill: ₱" + totalBill);
     }
     
-    /*
-    private static void printAllProducts() {
-        System.out.println("All products and Prices:");
-		while (!productQueue.isEmpty()) {
-		Product current = productQueue.poll();
-		System.out.println("Total products: " + current);
-        System.out.println();
-		}
-    }
-    */
-    /*
-    private static void findCheapestProduct() {
-        if (productQueue.isEmpty()) {
-            System.out.println("No products available.");
-            System.out.println();
-            return;
-        }
-        String cheapestName = null;
-        int cheapestPriceOfProduct = Integer.MAX_VALUE;
-
-        for (Map.Entry<String, Integer> e : productQueue.entrySet()) {
-            if (e.getValue() < cheapestPriceOfProduct) {
-                cheapestPriceOfProduct = e.getValue();
-                cheapestName = e.getKey();
-            }
-        }
-        System.out.println("Cheapest product: " + cheapestName + " - " + cheapestPriceOfProduct);
-        System.out.println();
-    }
-
-    private static String findKeyCaseInsensitive(String name) {
-        for (String key : productQueue.keySet()) {
-            if (key.equalsIgnoreCase(name)) {
-                return key;
-            }
-        }
-        return null;
-    }
-	*/
     private final static boolean isNumeric(String string){
-    	final String acceptedChars = "0123456789.";
-		boolean result = true;
-
-		char[] chars = string.toCharArray();
-    	for (int i = 0; i < chars.length; i++){
-    		char c = chars[i];
-        	if(acceptedChars.indexOf((c+"").toUpperCase()) < 0){
-        		result = false;
-        	}
-    		if(!result){
-    			return false;
-    		}
-    	}
-    	return true;
+        if (string == null) return false;
+        string = string.trim();
+        if (string.isEmpty()) return false;
+        return string.matches("^\\d+(\\.\\d+)?$");
     }
+
     
     private final static boolean isMultiplePeriod(String string){
     	int periodCount = 0;
